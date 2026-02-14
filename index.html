@@ -8,7 +8,6 @@
 ‏    
 ‏    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 ‏    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-‏    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 ‏
 ‏    <style>
 ‏        :root {
@@ -17,33 +16,68 @@
 ‏            --text: #2c3e50; --shadow: 0 4px 12px rgba(0,0,0,0.08);
 ‏        }
 ‏        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; direction: rtl; }
-‏        header { background: var(--primary); color: white; padding: 15px; text-align: center; border-bottom: 4px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
+‏        
+‏        header { 
+‏            background: var(--primary); color: white; padding: 15px; text-align: center; 
+‏            border-bottom: 4px solid var(--accent); position: sticky; top: 0; z-index: 1000;
+‏        }
 ‏        .eng-section { background: #111; color: var(--accent); margin: 10px; padding: 10px; border-radius: 8px; text-align: center; font-size: 14px; font-weight: bold; }
-‏        .tabs-container { display: flex; overflow-x: auto; background: white; padding: 12px; gap: 8px; box-shadow: var(--shadow); position: sticky; top: 65px; z-index: 999; }
+‏
+‏        .tabs-container { 
+‏            display: flex; overflow-x: auto; background: white; padding: 12px; gap: 8px; 
+‏            box-shadow: var(--shadow); position: sticky; top: 65px; z-index: 999;
+‏        }
 ‏        .tabs-container::-webkit-scrollbar { display: none; }
-‏        .tab-btn { background: #f0f2f5; border: none; padding: 8px 18px; border-radius: 20px; font-family: 'Cairo'; font-size: 12px; font-weight: bold; white-space: nowrap; cursor: pointer; }
+‏        .tab-btn { 
+‏            background: #f0f2f5; border: none; padding: 8px 18px; border-radius: 20px; 
+‏            font-family: 'Cairo'; font-size: 12px; font-weight: bold; white-space: nowrap; cursor: pointer; 
+‏        }
 ‏        .tab-btn.active { background: var(--primary); color: white; }
+‏
 ‏        .view-section { display: none; padding: 15px; animation: fadeIn 0.3s; }
 ‏        .view-section.active { display: block; }
 ‏        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+‏
 ‏        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 ‏        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid #eee; position: relative; }
 ‏        .card img { width: 100%; height: 120px; object-fit: cover; background: #eee; }
 ‏        .card-body { padding: 10px; }
 ‏        .p-name { font-size: 12px; font-weight: bold; height: 35px; overflow: hidden; }
 ‏        .p-price-num { color: var(--red); font-weight: 900; font-size: 15px; display: block; }
-‏        .form-container, .auth-container { background: white; padding: 25px; border-radius: 20px; box-shadow: var(--shadow); max-width: 500px; margin: 0 auto; }
-‏        .input-group { margin-bottom: 15px; text-align: right; }
+‏        .p-price-text { color: #2980b9; font-size: 10px; font-weight: bold; display: block; }
+‏
+‏        .form-container { background: white; padding: 25px; border-radius: 20px; box-shadow: var(--shadow); max-width: 500px; margin: 0 auto; }
+‏        .input-group { position: relative; margin-bottom: 15px; text-align: right; }
 ‏        .input-group label { display: block; font-size: 13px; font-weight: bold; color: var(--primary); margin-bottom: 5px; }
-‏        input, select, textarea { width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 12px; font-family: 'Cairo'; outline: none; background: #fafafa; font-size: 14px; box-sizing: border-box; }
-‏        .phone-input-container { display: flex; direction: ltr; gap: 5px; }
-‏        .country-prefix { background: #eee; padding: 14px; border-radius: 12px; font-weight: bold; border: 1px solid #e0e0e0; }
-‏        .btn-submit { background: var(--green); color: white; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 900; font-size: 16px; cursor: pointer; margin-top: 20px; }
+‏        
+‏        input, select, textarea { 
+‏            width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 12px; 
+‏            font-family: 'Cairo'; outline: none; background: #fafafa; font-size: 14px;
+‏            transition: 0.3s; box-sizing: border-box;
+‏        }
+‏
+‏        .upload-area { 
+‏            border: 2px dashed #d0d7de; padding: 25px; text-align: center; border-radius: 15px; 
+‏            cursor: pointer; background: #fdfdfd; transition: 0.3s; margin-top: 10px;
+‏        }
+‏        #imagePreview { width: 120px; height: 120px; object-fit: cover; margin: 15px auto 0; border-radius: 12px; border: 2px solid #eee; display: none; }
+‏
+‏        .btn-submit { 
+‏            background: var(--green); color: white; border: none; width: 100%; padding: 16px; 
+‏            border-radius: 12px; font-weight: 900; font-size: 16px; cursor: pointer; 
+‏            margin-top: 20px; box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+‏        }
+‏
+‏        .auth-container { background: white; padding: 25px; border-radius: 20px; box-shadow: var(--shadow); max-width: 500px; margin: 10px auto; }
+‏        .role-selector { display: flex; gap: 5px; margin-bottom: 20px; background: #f0f2f5; padding: 5px; border-radius: 10px; }
+‏        .role-btn { flex: 1; padding: 10px; font-size: 12px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; }
+‏        .role-btn.active { background: var(--primary); color: white; }
+‏        
 ‏        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #eee; z-index: 2000; }
 ‏        .nav-item { text-align: center; font-size: 10px; color: #999; cursor: pointer; flex: 1; }
 ‏        .nav-item.active { color: var(--primary); font-weight: bold; }
 ‏        .nav-item span { font-size: 20px; display: block; }
-‏        .delete-btn { position: absolute; top: 5px; left: 5px; background: var(--red); color: white; border: none; border-radius: 5px; padding: 3px 7px; font-size: 10px; z-index: 100; }
+‏        .delete-btn { position: absolute; top: 5px; left: 5px; background: var(--red); color: white; border: none; border-radius: 5px; padding: 3px 7px; font-size: 10px; cursor: pointer; z-index: 100;}
 ‏    </style>
 ‏</head>
 ‏<body>
@@ -59,58 +93,65 @@
 ‏        <button class="tab-btn" onclick="filterData('سيراميك', this)">سيراميك</button>
 ‏        <button class="tab-btn" onclick="filterData('صحيات', this)">صحيات</button>
 ‏        <button class="tab-btn" onclick="filterData('كهرباء', this)">كهرباء</button>
+‏        <button class="tab-btn" onclick="filterData('أصباغ', this)">أصباغ</button>
+‏        <button class="tab-btn" onclick="filterData('إنشائية', this)">إنشائية</button>
+‏        <button class="tab-btn" onclick="filterData('مبيدات', this)">مبيدات</button>
+‏        <button class="tab-btn" onclick="filterData('شبابيك', this)">شبابيك</button>
 ‏    </div>
 ‏    <div class="grid" id="mainGrid" style="margin-top:15px;"></div>
 ‏</div>
 ‏
 ‏<div id="supplierView" class="view-section">
 ‏    <div class="form-container">
-‏        <h3>📥 إضافة مادة جديدة</h3>
-‏        <input type="text" id="pName" placeholder="اسم المادة">
-‏        <input type="number" id="pPrice" placeholder="السعر">
-‏        <select id="pCat"><option>بناء</option><option>تسليح</option><option>سيراميك</option></select>
-‏        <div class="upload-area" onclick="document.getElementById('pImgFile').click()">📸 رفع صورة<input type="file" id="pImgFile" hidden onchange="previewAndResizeImage(this)"></div>
-‏        <img id="imagePreview" style="width:100%; display:none; border-radius:10px; margin-top:10px;">
-‏        <button class="btn-submit" onclick="addProduct()">نشر في السوق</button>
+‏        <h3 style="margin:0 0 20px; text-align: center; color: var(--primary);">📥 إضافة مادة جديدة للسوق</h3>
+‏        <div class="input-group">
+‏            <label>📦 اسم المادة</label>
+‏            <input type="text" id="pName" placeholder="مثال: سمنت مقاوم للرطوبة">
+‏        </div>
+‏        <div class="input-group">
+‏            <label>💰 السعر (دينار عراقي)</label>
+‏            <input type="number" id="pPrice" placeholder="أدخل السعر بالأرقام فقط">
+‏        </div>
+‏        <div class="input-group">
+‏            <label>📂 تصنيف المادة</label>
+‏            <select id="pCat">
+‏                <option>بناء</option><option>تسليح</option><option>سيراميك</option>
+‏                <option>صحيات</option><option>كهرباء</option><option>أصباغ</option>
+‏                <option>إنشائية</option><option>مبيدات</option><option>شبابيك</option>
+‏            </select>
+‏        </div>
+‏        <div class="upload-area" onclick="document.getElementById('pImgFile').click()">
+‏            <span style="font-size: 24px; display: block;">📸</span>
+‏            <span style="font-weight: bold; color: #555;">اضغط لرفع صورة المنتج</span>
+‏            <input type="file" id="pImgFile" accept="image/*" style="display:none" onchange="previewAndResizeImage(this)">
+‏            <img id="imagePreview" src="">
+‏        </div>
+‏        <button class="btn-submit" id="submitBtn" onclick="addProduct()">نشر في السوق العراقي</button>
 ‏    </div>
-‏    <div class="grid" id="adminGrid" style="margin-top:20px;"></div>
+‏    <h3 style="margin:30px 0 15px; border-right: 4px solid var(--accent); padding-right: 10px;">🛠️ موادك المنشورة حالياً</h3>
+‏    <div class="grid" id="adminGrid"></div>
 ‏</div>
 ‏
 ‏<div id="authView" class="view-section">
 ‏    <div class="auth-container">
-‏        <h3 id="authTitle" style="text-align:center;">👤 تسجيل الدخول</h3>
-‏        
-‏        <div id="step-phone">
-‏            <div class="input-group">
-‏                <label>رقم الهاتف العراقي</label>
-‏                <div class="phone-input-container">
-‏                    <span class="country-prefix">+964</span>
-‏                    <input type="tel" id="userPhone" placeholder="77XXXXXXXX" style="direction: ltr;">
-‏                </div>
-‏            </div>
-‏            <div id="recaptcha-container"></div>
-‏            <button class="btn-submit" onclick="sendOTP()">إرسال رمز التحقق</button>
+‏        <h3 style="margin:0 0 20px; text-align: center; color: var(--primary);">👤 إعداد الحساب الشخصي</h3>
+‏        <div class="role-selector">
+‏            <button class="role-btn active" id="role-customer" onclick="setRole('customer', this)">زبون</button>
+‏            <button class="role-btn" id="role-engineer" onclick="setRole('engineer', this)">مهندس</button>
+‏            <button class="role-btn" id="role-supplier" onclick="setRole('supplier', this)">مورد مواد</button>
 ‏        </div>
-‏
-‏        <div id="step-otp" style="display:none;">
-‏            <div class="input-group">
-‏                <label>أدخل الرمز المكون من 6 أرقام</label>
-‏                <input type="number" id="otpCode" placeholder="000000">
-‏            </div>
-‏            <button class="btn-submit" style="background:var(--primary)" onclick="verifyOTP()">تأكيد الرمز</button>
-‏        </div>
-‏
-‏        <div id="step-profile" style="display:none;">
-‏            <input type="text" id="userName" placeholder="الاسم الكامل">
-‏            <select id="userCity"><option>بغداد</option><option>البصرة</option><option>بابل</option></select>
-‏            <textarea id="userAddress" placeholder="العنوان بالتفصيل"></textarea>
-‏            <button class="btn-submit" onclick="saveProfile()">إتمام الحفظ</button>
-‏        </div>
+‏        <div class="input-group"><label>👤 الاسم الكامل</label><input type="text" id="userName"></div>
+‏        <div class="input-group"><label>📞 رقم الهاتف</label><input type="tel" id="userPhone"></div>
+‏        <div class="input-group"><label>📍 المحافظة</label><select id="userCity"><option>بغداد</option><option>البصرة</option><option>بابل</option><option>النجف</option><option>نينوى</option></select></div>
+‏        <div class="input-group"><label>🏠 العنوان</label><textarea id="userAddress"></textarea></div>
+‏        <div id="businessDetails" style="display: none;"><div class="input-group"><label>🏗️ الشركة</label><input type="text" id="businessName"></div></div>
+‏        <button class="btn-submit" onclick="saveAccount()">حفظ وإعداد الحساب</button>
+‏        <p id="saveMsg" style="color: var(--green); display: none;">✅ تم الحفظ بنجاح!</p>
 ‏    </div>
 ‏</div>
 ‏
 ‏<div id="adminOrdersView" class="view-section">
-‏    <h3>📥 الطلبات الواردة</h3>
+‏    <h3 style="border-right: 4px solid var(--accent); padding-right: 10px;">📥 طلبات الزبائن الواردة</h3>
 ‏    <div id="ordersList"></div>
 ‏</div>
 ‏
@@ -122,8 +163,9 @@
 ‏</div>
 ‏
 ‏<script>
+‏    // تم تحديث الرابط الجديد لقاعدة البيانات (سيرفر آسيا) لضمان التطابق التام
 ‏    const firebaseConfig = {
-‏        apiKey: "AIzaSyA6PC-y6wO1Lv8Hjgi...", // كودك الخاص
+‏        apiKey: "AIzaSyA6PC-y6wO1Lv8Hjgi...", 
 ‏        authDomain: "hussain-e8703.firebaseapp.com",
 ‏        databaseURL: "https://hussain-e8703-default-rtdb.asia-southeast1.firebasedatabase.app/",
 ‏        projectId: "hussain-e8703",
@@ -134,75 +176,142 @@
 ‏
 ‏    firebase.initializeApp(firebaseConfig);
 ‏    const db = firebase.database();
-‏    const auth = firebase.auth();
 ‏
 ‏    let state = {
 ‏        products: [],
 ‏        orders: [],
-‏        account: JSON.parse(localStorage.getItem('m_account')) || null,
-‏        tempImg: ""
+‏        account: JSON.parse(localStorage.getItem('m_account')) || { role: 'customer' },
+‏        tempImg: "",
+‏        currentFilter: 'الكل'
 ‏    };
 ‏
-‏    // إعداد الريكابتشا
-‏    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
-‏
-‏    function sendOTP() {
-‏        const rawPhone = document.getElementById('userPhone').value;
-‏        const fullPhone = "+964" + rawPhone;
-‏        auth.signInWithPhoneNumber(fullPhone, window.recaptchaVerifier)
-‏            .then(result => {
-‏                window.confirmationResult = result;
-‏                document.getElementById('step-phone').style.display = 'none';
-‏                document.getElementById('step-otp').style.display = 'block';
-‏                alert("تم إرسال الرمز بنجاح");
-‏            }).catch(err => alert("خطأ: " + err.message));
-‏    }
-‏
-‏    function verifyOTP() {
-‏        const code = document.getElementById('otpCode').value;
-‏        window.confirmationResult.confirm(code)
-‏            .then(() => {
-‏                document.getElementById('step-otp').style.display = 'none';
-‏                document.getElementById('step-profile').style.display = 'block';
-‏                document.getElementById('authTitle').innerText = "تكملة الملف الشخصي";
-‏            }).catch(() => alert("الرمز خاطئ"));
-‏    }
-‏
-‏    function saveProfile() {
-‏        const acc = {
-‏            name: document.getElementById('userName').value,
-‏            phone: "+964" + document.getElementById('userPhone').value,
-‏            city: document.getElementById('userCity').value,
-‏            addr: document.getElementById('userAddress').value,
-‏            role: 'customer'
-‏        };
-‏        db.ref('users/' + acc.phone.replace('+', '')).set(acc).then(() => {
-‏            localStorage.setItem('m_account', JSON.stringify(acc));
-‏            state.account = acc;
-‏            alert("تم حفظ الحساب!");
-‏            location.reload();
-‏        });
-‏    }
-‏
-‏    // دوال المنتجات (بدون تغيير)
+‏    // مراقبة المنتجات
 ‏    db.ref('products').on('value', (s) => {
 ‏        const val = s.val();
-‏        state.products = val ? Object.keys(val).map(k => ({...val[k], id: k})) : [];
-‏        render();
+‏        state.products = val ? Object.keys(val).map(key => ({...val[key], id: key})) : [];
+‏        render(state.currentFilter);
 ‏    });
 ‏
-‏    function render() {
-‏        const grid = document.getElementById('mainGrid');
-‏        grid.innerHTML = state.products.map(p => `
+‏    // مراقبة الطلبات
+‏    db.ref('orders').on('value', (s) => {
+‏        const val = s.val();
+‏        state.orders = val ? Object.keys(val).map(key => ({...val[key], id: key})) : [];
+‏        renderOrders();
+‏    });
+‏
+‏    function previewAndResizeImage(input) {
+‏        if (input.files && input.files[0]) {
+‏            let r = new FileReader();
+‏            r.onload = e => {
+‏                let img = new Image();
+‏                img.onload = function() {
+‏                    let canvas = document.createElement('canvas');
+‏                    let maxW = 400; 
+‏                    let scale = maxW / img.width;
+‏                    canvas.width = maxW;
+‏                    canvas.height = img.height * scale;
+‏                    let ctx = canvas.getContext("2d");
+‏                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+‏                    state.tempImg = canvas.toDataURL("image/jpeg", 0.5); 
+‏                    document.getElementById('imagePreview').src = state.tempImg;
+‏                    document.getElementById('imagePreview').style.display = "block";
+‏                };
+‏                img.src = e.target.result;
+‏            };
+‏            r.readAsDataURL(input.files[0]);
+‏        }
+‏    }
+‏
+‏    function addProduct() {
+‏        const n = document.getElementById('pName').value, 
+‏              p = document.getElementById('pPrice').value, 
+‏              c = document.getElementById('pCat').value;
+‏        const btn = document.getElementById('submitBtn');
+‏
+‏        if(n && p) {
+‏            btn.disabled = true; btn.innerText = "جاري النشر...";
+‏            const newPostKey = db.ref().child('products').push().key;
+‏            const finalImg = state.tempImg || "https://via.placeholder.com/300x200?text=No+Image";
+‏            
+‏            db.ref('products/' + newPostKey).set({
+‏                id: newPostKey, name:n, price:Number(p), cat:c, img:finalImg
+‏            })
+‏            .then(() => {
+‏                alert("✅ تم النشر بنجاح!");
+‏                document.getElementById('pName').value = ""; 
+‏                document.getElementById('pPrice').value = "";
+‏                document.getElementById('imagePreview').style.display="none"; 
+‏                state.tempImg="";
+‏                btn.disabled = false; btn.innerText = "نشر في السوق العراقي";
+‏            })
+‏            .catch(err => {
+‏                alert("❌ فشل: " + err.message);
+‏                btn.disabled = false; btn.innerText = "نشر في السوق العراقي";
+‏            });
+‏        } else {
+‏            alert("⚠️ يرجى ملء الاسم والسعر");
+‏        }
+‏    }
+‏
+‏    function order(id) {
+‏        const p = state.products.find(x => x.id == id);
+‏        const ph = prompt("أدخل رقم هاتفك لتأكيد الطلب:", state.account.phone || "");
+‏        if(ph) {
+‏            const ordId = db.ref().child('orders').push().key;
+‏            db.ref('orders/' + ordId).set({
+‏                id: ordId, pName: p.name, phone: ph, time: new Date().toLocaleString(), status: 'جديد'
+‏            }).then(() => alert("تم إرسال طلبك للمورد!"));
+‏        }
+‏    }
+‏
+‏    function del(id) { 
+‏        if(confirm("حذف المادة؟")) {
+‏            db.ref('products/' + id).remove();
+‏        }
+‏    }
+‏
+‏    function saveAccount() {
+‏        state.account = {
+‏            role: state.account.role,
+‏            name: document.getElementById('userName').value,
+‏            phone: document.getElementById('userPhone').value,
+‏            city: document.getElementById('userCity').value,
+‏            addr: document.getElementById('userAddress').value,
+‏            bName: document.getElementById('businessName').value
+‏        };
+‏        localStorage.setItem('m_account', JSON.stringify(state.account));
+‏        db.ref('users/' + state.account.phone).set(state.account);
+‏        document.getElementById('saveMsg').style.display = 'block';
+‏        setTimeout(() => document.getElementById('saveMsg').style.display = 'none', 3000);
+‏    }
+‏
+‏    function render(filter = 'الكل') {
+‏        state.currentFilter = filter;
+‏        const filtered = filter === 'الكل' ? state.products : state.products.filter(p => p.cat === filter);
+‏        
+‏        const cardHtml = (p, adm) => `
 ‏            <div class="card">
+‏                ${adm ? `<button class="delete-btn" onclick="del('${p.id}')">حذف</button>` : ''}
 ‏                <img src="${p.img}">
 ‏                <div class="card-body">
 ‏                    <div class="p-name">${p.name}</div>
-‏                    <span class="p-price-num">${p.price} د.ع</span>
-‏                    <button class="btn-submit" style="padding:5px" onclick="order('${p.id}')">اطلب الآن</button>
+‏                    <span class="p-price-num">${Number(p.price).toLocaleString()} د.ع</span>
+‏                    ${!adm ? `<button class="btn-submit" style="padding:8px; font-size:12px; margin-top:5px" onclick="order('${p.id}')">اطلب</button>` : ''}
 ‏                </div>
-‏            </div>
-‏        `).join('');
+‏            </div>`;
+‏
+‏        document.getElementById('mainGrid').innerHTML = filtered.map(p => cardHtml(p, false)).join('');
+‏        document.getElementById('adminGrid').innerHTML = state.products.map(p => cardHtml(p, true)).join('');
+‏    }
+‏
+‏    function renderOrders() {
+‏        document.getElementById('ordersList').innerHTML = state.orders.map(o => `
+‏            <div style="background:white; padding:15px; border-radius:12px; margin-bottom:10px; border-right:5px solid var(--accent); box-shadow: var(--shadow);">
+‏                <b>📦 ${o.pName}</b><br><small>📱 ${o.phone} | ⏰ ${o.time}</small>
+‏                <div style="margin-top:10px">
+‏                    <a href="tel:${o.phone}" style="color:green; text-decoration:none; font-weight:bold; font-size:14px;">📞 اتصال بالزبون</a>
+‏                </div>
+‏            </div>`).join('');
 ‏    }
 ‏
 ‏    function switchView(id, btn) {
@@ -210,38 +319,37 @@
 ‏        document.getElementById(id).classList.add('active');
 ‏        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 ‏        btn.classList.add('active');
+‏        window.scrollTo(0, 0); // لضمان العودة لأعلى الصفحة عند التنقل
 ‏    }
 ‏
-‏    // دالة إضافة المنتج مع ضغط الصورة
-‏    function addProduct() {
-‏        const n = document.getElementById('pName').value;
-‏        const p = document.getElementById('pPrice').value;
-‏        if(n && p && state.tempImg) {
-‏            const key = db.ref('products').push().key;
-‏            db.ref('products/'+key).set({name:n, price:p, img:state.tempImg, cat:document.getElementById('pCat').value})
-‏            .then(() => alert("تم النشر!"));
-‏        }
+‏    function filterData(c, b) {
+‏        document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+‏        b.classList.add('active');
+‏        render(c);
 ‏    }
 ‏
-‏    function previewAndResizeImage(input) {
-‏        if (input.files && input.files[0]) {
-‏            let reader = new FileReader();
-‏            reader.onload = e => {
-‏                let img = new Image();
-‏                img.onload = () => {
-‏                    let canvas = document.createElement('canvas');
-‏                    let ctx = canvas.getContext('2d');
-‏                    canvas.width = 400; canvas.height = 300;
-‏                    ctx.drawImage(img, 0, 0, 400, 300);
-‏                    state.tempImg = canvas.toDataURL('image/jpeg', 0.6);
-‏                    document.getElementById('imagePreview').src = state.tempImg;
-‏                    document.getElementById('imagePreview').style.display = 'block';
-‏                };
-‏                img.src = e.target.result;
-‏            };
-‏            reader.readAsDataURL(input.files[0]);
-‏        }
+‏    function setRole(r, b) { 
+‏        state.account.role = r; 
+‏        document.querySelectorAll('.role-btn').forEach(x => x.classList.remove('active'));
+‏        b.classList.add('active');
+‏        document.getElementById('businessDetails').style.display = (r === 'customer') ? 'none' : 'block';
 ‏    }
+‏
+‏    window.onload = function() {
+‏        const acc = state.account;
+‏        if(acc && acc.name) {
+‏            document.getElementById('userName').value = acc.name || "";
+‏            document.getElementById('userPhone').value = acc.phone || "";
+‏            document.getElementById('userCity').value = acc.city || "بغداد";
+‏            document.getElementById('userAddress').value = acc.addr || "";
+‏            document.getElementById('businessName').value = acc.bName || "";
+‏            if(acc.role) {
+‏                const roleBtn = document.getElementById('role-' + acc.role);
+‏                if(roleBtn) setRole(acc.role, roleBtn);
+‏            }
+‏        }
+‏        render();
+‏    };
 ‏</script>
 ‏</body>
 ‏</html>
